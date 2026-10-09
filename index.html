@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>you know like</title>
+  <meta name="description" content="A counter for every time someone says 'you know like'.">
+  <meta name="theme-color" content="#f4f1ea" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="yk/l">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --fg: #1a1a1a;
+      --muted: #8a857c;
+      --btn: #1a1a1a;
+      --btn-fg: #f4f1ea;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121212;
+        --fg: #e8e6e1;
+        --muted: #6b6862;
+        --btn: #e8e6e1;
+        --btn-fg: #121212;
+      }
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom);
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+    #tap {
+      width: min(72vw, 72vh, 340px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: none;
+      background: var(--btn);
+      color: var(--btn-fg);
+      font-family: inherit;
+      font-size: clamp(1.4rem, 7vw, 2.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      cursor: pointer;
+    }
+    #tap:active { opacity: 0.85; }
+    #count {
+      font-size: clamp(3.5rem, 18vw, 6rem);
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
+    #reset {
+      position: fixed;
+      bottom: calc(env(safe-area-inset-bottom) + 16px);
+      background: none;
+      border: none;
+      color: var(--muted);
+      font: inherit;
+      font-size: 0.8rem;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <button id="tap" type="button">you know like</button>
+  <div id="count">0</div>
+  <button id="reset" type="button">reset</button>
+
+  <script>
+    const KEY = "you-know-like-count";
+    const countEl = document.getElementById("count");
+
+    function load() {
+      try { return parseInt(localStorage.getItem(KEY), 10) || 0; } catch { return 0; }
+    }
+    function save(n) {
+      try { localStorage.setItem(KEY, String(n)); } catch {}
+    }
+
+    let count = load();
+    countEl.textContent = count;
+
+    document.getElementById("tap").addEventListener("click", () => {
+      count += 1;
+      countEl.textContent = count;
+      save(count);
+    });
+
+    document.getElementById("reset").addEventListener("click", () => {
+      if (confirm("Reset the count to 0?")) {
+        count = 0;
+        countEl.textContent = count;
+        save(count);
+      }
+    });
+  </script>
+</body>
+</html>
